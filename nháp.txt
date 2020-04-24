@@ -1,0 +1,55 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Playermove : MonoBehaviour
+{
+    // Start is called before the first frame update
+    public CharacterController controller;
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
+
+
+    Vector3 moveVector;
+    private float speed = 10f //toc do
+       , gravity = -9.8f      // trong luong
+       , speedY = 0f
+       , animationTime = 3f;
+    // Update is called once per frame
+    void Update()
+    {
+        moveVector = Vector3.zero;
+
+        if (Time.time < animationTime)
+        {
+            controller.Move(Vector3.forward * speed * Time.deltaTime);
+            return;
+        }
+
+        if (controller.isGrounded)
+        {
+            speedY = 0f;
+        }
+        else
+        {
+            speedY = (gravity * Time.deltaTime) / 2;
+        }
+
+        //di chuyen theo truc x 
+        moveVector.x = Input.GetAxisRaw("Horizontal") * speed;
+        //di chuyen theo truc z
+        moveVector.z = speed;
+        if (Input.GetKey(KeyCode.Space))
+        {
+            moveVector = Vector3.Lerp(moveVector, new Vector3(moveVector.x, 20, moveVector.z), Time.deltaTime * speed);
+        }
+        else
+        {
+            moveVector = Vector3.Lerp(moveVector, new Vector3(moveVector.x, 20, moveVector.z), Time.deltaTime * speed);
+        }
+
+        controller.Move(moveVector * Time.deltaTime);
+    }
+}
