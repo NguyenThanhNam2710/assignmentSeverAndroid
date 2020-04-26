@@ -41,21 +41,31 @@
 
     <div class="container rounded-bottom bg-light ">
         <br> <br>
-        <div class="card" style="width: 18rem;">
-            <img src="../images/abc.jpg" class="card-img-top" alt="Sakura">
-            <div class="card-body">
-                <h5 class="card-title">Tên sản phẩm</h5>
-                <p class="card-text">Miêu tả</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Giá</li>
-                <li class="list-group-item">Loại</li>
-            </ul>
-            <div class="card-body">
-                <a href="#" class="card-link">Chi tiết</a>
+        <div class=" container col-10">
+            <div class="row row-cols-1 row-cols-md-3">
+
+
+                {{#each data}}
+                    <div class="col mb-4">
+                        <div class="card">
+                            <img src="./khautrang.png" class="card-img-top" width="100px" height="100px"
+                                 alt='image product'>
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.name}}</h5>
+                                <p class="card-text">{{this.description}}</p>
+                                <div class="card-footer">
+                                    <p class="">Giá:  {{this.price}}</p>
+                                    <p class="">Loại:  {{this.type}}</p>
+                                    <a class="btn btn-primary col-12">Chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
             </div>
         </div>
     </div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

@@ -37,16 +37,16 @@
             </form>
         </div>
     </nav>
-    <h1 class="alert-primary col col-sm-12"><span class="badge alert-dismissible">Namntph07245_LAB5</span></h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
 
-        <div class="form-group">
-            <label for="example-input-file"> </label>
-            <input type="file" name="avatar" multiple id="input-many-files" required class="form-control-file border">
+    <div class=" container col-10">
+        <div class=" container col-6">
+            {{#each data}}
+                <h2>Xin chào tài khoản {{this.username}}</h2>
+                <div>Chúc bạn ngày mới tốt lành</div>
+                <a class="btn btn-primary">Đăng xuất</a>
+            {{/each}}
         </div>
-        <button type="submit" name="Upload" class="btn btn-primary">Submit</button>
-
-    </form>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

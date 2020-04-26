@@ -41,29 +41,35 @@
 
     <div class="container rounded-bottom bg-light ">
         <br> <br>
-        <form>
+        <form action="" method="get" class=" container col-10">
             <div class="form-group">
                 <label for="nameSP">Tên sản phẩm</label>
-                <input type="text" class="form-control" id="nameSP">
+                <input type="text" class="form-control" name="nameSP">
             </div>
             <div class="form-group">
                 <label for="priceSP">Giá sản phẩm</label>
-                <input type="text" class="form-control" id="priceSP">
+                <input type="text" class="form-control" name="priceSP">
             </div>
             <div class="form-group">
                 <label for="exImage">Hình ảnh</label>
-                <input type="file" class="form-control-file" id="exImage">
+                <input type="file" class="form-control-file" name="exImage">
             </div>
             <div class="form-group">
                 <label for="aboutSP">Miêu tả sản phẩm</label>
-                <input type="text" class="form-control" id="aboutSP">
+                <input type="text" class="form-control" name="descriptionSP">
             </div>
             <div class="form-group">
                 <label for="typeSP">Loại sản shẩm</label>
-                <input type="text" class="form-control" id="typeSP">
+                <input type="text" class="form-control" name="typeSP">
             </div>
             <button type="submit" class="btn btn-primary">Đăng</button>
         </form>
+        <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{data}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
