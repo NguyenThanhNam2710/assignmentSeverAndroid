@@ -80,8 +80,8 @@ app.get('/signUp', async function (request, response) {
         let userKH = request.query.userKH;
         let passKH = request.query.passKH;
         response.render('signUp', {
-            title: 'Sửa tài khoản',
-            btnUD: 'Sửa',
+            title: 'Cập nhật tài khoản',
+            btnUD: 'Cập nhật',
             btnC: 'Làm lại',
             action: 'danhsachkhachhang',
             userKH: userKH,
@@ -102,13 +102,45 @@ app.get('/signUp', async function (request, response) {
 
 
 });
+app.get('/updatesanpham', async function (request, response) {
+
+    let update = request.query.update;
+    console.log(update + '')
+    if (update == 1) {
+        update = 0;
+
+        let idSP = request.query.idSP;
+        let imageSP = request.query.imageSP;
+        let nameSP = request.query.nameSP;
+        let priceSP = request.query.priceSP;
+        let descriptionSP = request.query.descriptionSP;
+        let typeSP = request.query.typeSP;
+        let slSP = request.query.slSP;
+
+        response.render('updatesanpham', {
+            title: 'Cập nhật sản phẩm',
+            status:'none',
+            btnUD: 'Cập nhật',
+            btnC: 'Làm lại',
+            idSP:idSP,
+            imageSP:imageSP,
+            nameSP:nameSP,
+            priceSP:priceSP,
+            descriptionSP:descriptionSP,
+            typeSP:typeSP,
+            slSP:slSP,
+        });
+    }
+
+
+});
 app.get('/uploadsanpham', async function (request, response) {
 
     let nameSP = request.query.nameSP;
     let priceSP = request.query.priceSP;
     let descriptionSP = request.query.descriptionSP;
     let typeSP = request.query.typeSP;
-    let slSp = request.query.slSP;
+    let slSP = request.query.slSP;
     let image = request.query.exImage;
     if (nameSP && priceSP && descriptionSP && typeSP) {
         let addProduct = new Product({
@@ -116,7 +148,7 @@ app.get('/uploadsanpham', async function (request, response) {
             price: priceSP,
             description: descriptionSP,
             type: typeSP,
-            sl: slSp,
+            sl: slSP,
             image: '../public/images/' + image
         });
         let status = await addProduct.save();
@@ -164,7 +196,41 @@ app.get('/quanlysanpham', async function (request, response) {
                 textAlert: 'Xóa sản phẩm thất bại.'
             });
         }
-    } else {
+    }  else if (edit == 1) {
+
+        let nId = request.query.nId;
+        let nameSP = request.query.nameSP;
+        let priceSP = request.query.priceSP;
+        let exImage = request.query.exImage;
+        let descriptionSP = request.query.descriptionSP;
+        let typeSP = request.query.typeSP;
+        let slSP = request.query.slSP;
+
+        console.log(nId + "edit sp");
+        let status = await Product.findByIdAndUpdate(nId, {
+            name: nameSP,
+            price: priceSP,
+            description: descriptionSP,
+            type: typeSP,
+            sl: slSP,
+            image: '../public/images/' + exImage
+        });
+        let nProduct = await Product.find({}).lean();
+        if (status) {
+            response.render('quanlysanpham', {
+                data: nProduct,
+                status: 'block',
+                textAlert: 'Cập nhật sản phẩm thành công.'
+            });
+        } else {
+            response.render('quanlysanpham', {
+                data: nProduct,
+                status: 'block',
+                textAlert: 'Cập nhật sản phẩm thất bại.'
+            });
+        }
+
+    }else {
         response.render('quanlysanpham', {data: products, status: 'none'});
     }
 });

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>sp</title>
+    <title>{{title}}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
@@ -41,31 +41,51 @@
 
     <div class="container rounded-bottom bg-light ">
         <br> <br>
-        <div class=" container col-10">
-            <div class="row row-cols-1 row-cols-md-3">
-
-
-                {{#each data}}
-                    <div class="col mb-4">
-                        <div class="card">
-                            <img src="{{this.image}}" class="card-img-top" width="100px" height="200px"
-                                 alt='{{this.image}}'>
-                            <div class="card-body">
-                                <h5 class="card-title">{{this.name}}</h5>
-                                <p class="card-text">{{this.description}}</p>
-                                <div class="card-footer">
-                                    <p class="">Giá:  {{this.price}}</p>
-                                    <p class="">Loại:  {{this.type}}</p>
-                                    <a class="btn btn-primary col-12">Thêm vào giỏ hàng</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {{/each}}
-            </div>
+        <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{data}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        <form action="/quanlysanpham" method="get" class=" container col-10">
+            <input type="text" name="nId" value="{{idSP}}" required class="form-control"style="display: none">
+            <div class="form-group">
+                <label for="nameSP">Tên sản phẩm</label>
+                <input type="text" class="form-control" value="{{nameSP}}" required name="nameSP">
+            </div>
+            <div class="form-group">
+                <label for="priceSP">Giá sản phẩm</label>
+                <input type="text" class="form-control" value="{{priceSP}}" required name="priceSP">
+            </div>
+            <div class="form-group">
+                <label for="exImage">Hình ảnh</label>
+                <input type="file" class="form-control-file" value="{{imageSP}}" required name="exImage">
+            </div>
+            <div class="form-group">
+                <label for="descriptionSP">Miêu tả sản phẩm</label>
+                <input type="text" class="form-control" value="{{descriptionSP}}" required name="descriptionSP">
+            </div>
+            <div class="form-group">
+                <label for="typeSP">Loại sản shẩm</label>
+                <input type="text" class="form-control" value="{{typeSP}}" required name="typeSP">
+            </div>
+            <div class="form-group">
+                <label for="slSP">Số lượng</label>
+                <input type="text" class="form-control" value="{{slSP}}" required name="slSP">
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <button type="submit" name="update" value="1" class="btn btn-outline-dark col-sm-12 ">{{btnUD}}</button>
+                </div>
+                <div class="col-4">
+                    <button type="reset" id="cancel" class="btn btn-outline-dark col-sm-12">{{btnC}}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <br><br><br>
     </div>
-</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

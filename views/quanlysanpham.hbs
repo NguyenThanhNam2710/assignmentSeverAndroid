@@ -71,7 +71,20 @@
                     <td>{{this.sl}}</td>
                     <td>
 
-                        <a class="btn btn-primary">Sửa</a>
+                        <form action="/updatesanpham" method="get">
+                            <div class="form-group" style="display: none">
+                                <input type="text" name="idSP" value="{{this._id}}" class="form-control">
+                                <input type="text" name="imageSP" value="{{this.image}}" class="form-control">
+                                <input type="text" name="nameSP" value="{{this.name}}" class="form-control">
+                                <input type="text" name="priceSP" value="{{this.price}}" class="form-control">
+                                <input type="text" name="descriptionSP" value="{{this.description}}" class="form-control">
+                                <input type="text" name="typeSP" value="{{this.type}}" class="form-control">
+                                <input type="text" name="slSP" value="{{this.sl}}" class="form-control">
+                            </div>
+
+                            <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
+
+                        </form>
                         <form>
                             <div class="form-group" style="display: none">
                                 <input type="text" name="idSP" value="{{this._id}}" class="form-control">
