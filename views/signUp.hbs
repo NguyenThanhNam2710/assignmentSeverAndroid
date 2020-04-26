@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title>{{title}}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -12,20 +12,20 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container collapse navbar-collapse col-4">
-            <a class="navbar-brand " href="#"><span class="text-capitalize display-4">Create Accout</span></a>
+            <a class="navbar-brand " href="#"><span class="text-capitalize display-4">{{title}}</span></a>
         </div>
     </nav>
     <div class="container rounded-bottom bg-light ">
         <br> <br> <br>
-        <form action="/signIn" method="get"  class=" container col-10">
+        <form action="/signIn" method="get" class=" container col-10">
             <div class="form-group">
                 <label for="InputUsername">Username</label>
-                <input type="text" name="nUser" class="form-control" id="InputUsername" required
+                <input type="text" name="nUser" value="{{userKH}}" class="form-control" id="InputUsername" required
                        placeholder="Enter your username">
             </div>
             <div class="form-group">
                 <label for="InputPassword">Password</label>
-                <input type="password" name="nPass" class="form-control" id="InputPassword" required
+                <input type="password" name="nPass" value="{{passKH}}" class="form-control" id="InputPassword" required
                        placeholder="Enter your password">
             </div>
             <div id="ConfirmPassword" class="form-group">
@@ -37,11 +37,10 @@
             <br>
             <div class="row justify-content-center">
                 <div class="col-4">
-                    <button type="submit" id="sm" class="btn btn-outline-dark col-sm-12 ">Sign up</button>
+                    <button type="submit" id="sm" class="btn btn-outline-dark col-sm-12 ">{{btnUD}}</button>
                 </div>
                 <div class="col-4">
-                    <button type="button" id="cancel" class="btn btn-outline-dark col-sm-12">
-                        Cancel
+                    <button type="reset" id="cancel" class="btn btn-outline-dark col-sm-12">{{btnC}}
                     </button>
                 </div>
             </div>

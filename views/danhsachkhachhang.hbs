@@ -67,9 +67,20 @@
                         <form>
                             <div class="form-group" style="display: none">
                                 <input type="text" name="idKH" value="{{this._id}}" class="form-control">
+                                <input type="text" name="userKH" value="{{this.username}}" class="form-control">
+                                <input type="text" name="passKH" value="{{this.password}}" class="form-control">
+                            </div>
+                            <button type="submit" name="del" value="1" class="btn btn-danger">Xóa</button>
+                        </form>
+                        <form action="/signUp" method="get">
+                            <div class="form-group" style="display: none">
+                                <input type="text" name="idKH" value="{{this._id}}" class="form-control">
+                                <input type="text" name="userKH" value="{{this.username}}" class="form-control">
+                                <input type="text" name="passKH" value="{{this.password}}" class="form-control">
                             </div>
 
-                            <button type="submit" name="del" value="1" class="btn btn-primary">Xóa</button>
+                            <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
+
                         </form>
                     </td>
                 </tr>

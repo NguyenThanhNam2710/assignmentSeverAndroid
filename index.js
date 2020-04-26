@@ -22,6 +22,7 @@ app.engine('.hbs', hbs({
 }))
 app.set('view engine', '.hbs')
 app.listen(9090);
+
 app.get('/signIn', async function (request, response) {
 
     let nUser = request.query.nUser;
@@ -33,7 +34,7 @@ app.get('/signIn', async function (request, response) {
     });
     let status = await newUser.save();
     if (status) {
-        response.render('signIn', {status: 'block', data: 'Account successfully created.', user: nUser, pass: nPass});
+        response.render('signIn', {status: 'block', data: 'Tạo tài khoản thành công.', user: nUser, pass: nPass});
     } else {
         response.send('Tạo tài khoản thất bại.');
     }
@@ -43,7 +44,33 @@ app.get('/', function (request, response) {
     response.render('signIn', {status: 'none', user: '', pass: ''});
 });
 app.get('/signUp', async function (request, response) {
-    response.render('signUp');
+
+    let update = request.query.update;
+    console.log(update + '')
+    if (update == 1) {
+        update = 0;
+
+        let idKH = request.query.idKH;
+        let userKH = request.query.userKH;
+        let passKH = request.query.passKH;
+        response.render('signUp', {
+            title: 'Sửa tài khoản',
+            btnUD: 'Sửa',
+            btnC: 'Làm lại',
+            userKH: userKH,
+            passKH: passKH
+        });
+    } else {
+        response.render('signUp', {
+            title: 'Tạo tài khoản',
+            btnUD: 'Xong',
+            btnC: 'Làm lại',
+            userKH: '',
+            passKH: ''
+        });
+    }
+
+
 });
 app.get('/index', async function (request, response) {
 
@@ -56,7 +83,12 @@ app.get('/index', async function (request, response) {
     let users = await User.find({username: user, password: pass}).lean();   //dk
 
     if (users.length <= 0 && sm == 1) {
-        response.render('signIn', {status: 'block', data: 'Can\'t login !!! Check your account.', user: '', pass: ''});
+        response.render('signIn', {
+            status: 'block',
+            data: 'Không thể đăng nhập, kiểm tra lại tài khoản và mật khẩu của bạn.',
+            user: '',
+            pass: ''
+        });
     } else {
         response.render('index', {data: users});
     }
@@ -99,17 +131,17 @@ app.get('/uploadsanpham', async function (request, response) {
 app.get('/danhsachkhachhang', async function (request, response) {
     let users = await User.find({}).lean();
 
-
     let idKH = request.query.idKH;
     let del = request.query.del;
     if (del == 1) {
         console.log(idKH);
         del = 0;
         let status = await User.findByIdAndDelete(idKH);
+        let nUsers = await User.find({}).lean();
         if (status) {
-            response.render('danhsachkhachhang', {data: users, status: 'block', textAlert: 'Xóa thành công.'});
+            response.render('danhsachkhachhang', {data: nUsers, status: 'block', textAlert: 'Xóa thành công.'});
         } else {
-            response.render('danhsachkhachhang', {data: users, status: 'block', textAlert: 'Xóa thất bại.'});
+            response.render('danhsachkhachhang', {data: nUsers, status: 'block', textAlert: 'Xóa thất bại.'});
         }
 
     } else {
