@@ -17,7 +17,8 @@
     </nav>
     <div class="container rounded-bottom bg-light ">
         <br> <br> <br>
-        <form action="/signIn" method="get" class=" container col-10">
+        <form action="/{{action}}" method="get" class=" container col-10">
+            <input type="text" name="nId" value="{{idKH}}" class="form-control"style="display: none">
             <div class="form-group">
                 <label for="InputUsername">Username</label>
                 <input type="text" name="nUser" value="{{userKH}}" class="form-control" id="InputUsername" required
@@ -37,7 +38,7 @@
             <br>
             <div class="row justify-content-center">
                 <div class="col-4">
-                    <button type="submit" id="sm" class="btn btn-outline-dark col-sm-12 ">{{btnUD}}</button>
+                    <button type="submit" name="update" value="1" class="btn btn-outline-dark col-sm-12 ">{{btnUD}}</button>
                 </div>
                 <div class="col-4">
                     <button type="reset" id="cancel" class="btn btn-outline-dark col-sm-12">{{btnC}}

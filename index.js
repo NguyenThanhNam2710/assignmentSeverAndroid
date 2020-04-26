@@ -57,16 +57,20 @@ app.get('/signUp', async function (request, response) {
             title: 'Sửa tài khoản',
             btnUD: 'Sửa',
             btnC: 'Làm lại',
+            action: 'danhsachkhachhang',
             userKH: userKH,
-            passKH: passKH
+            passKH: passKH,
+            idKH:idKH
         });
     } else {
         response.render('signUp', {
             title: 'Tạo tài khoản',
             btnUD: 'Xong',
             btnC: 'Làm lại',
+            action: 'signIn',
             userKH: '',
-            passKH: ''
+            passKH: '',
+            idKH:''
         });
     }
 
@@ -130,12 +134,13 @@ app.get('/uploadsanpham', async function (request, response) {
 });
 app.get('/danhsachkhachhang', async function (request, response) {
     let users = await User.find({}).lean();
-
     let idKH = request.query.idKH;
     let del = request.query.del;
+    let edit = request.query.update;
+    console.log(del + ' ' + edit);
     if (del == 1) {
-        console.log(idKH);
-        del = 0;
+        console.log(idKH + "del");
+
         let status = await User.findByIdAndDelete(idKH);
         let nUsers = await User.find({}).lean();
         if (status) {
@@ -144,9 +149,30 @@ app.get('/danhsachkhachhang', async function (request, response) {
             response.render('danhsachkhachhang', {data: nUsers, status: 'block', textAlert: 'Xóa thất bại.'});
         }
 
+    } else if (edit == 1) {
+        console.log(idKH + "edit");
+
+        let nId = request.query.nId;
+        let nUser = request.query.nUser;
+        let nPass = request.query.nPass;
+        let status = await User.findByIdAndUpdate(nId, {
+            username: nUser,
+            password: nPass
+        });
+        let nUsers = await User.find({}).lean();
+        if (status) {
+            response.render('danhsachkhachhang', {data: nUsers, status: 'block', textAlert: 'Cập nhật thành công.'});
+        } else {
+            response.render('danhsachkhachhang', {data: nUsers, status: 'block', textAlert: 'Cập nhật thất bại.'});
+        }
+
     } else {
         response.render('danhsachkhachhang', {data: users, status: 'none'});
+        del = 0;
+        edit = 0;
     }
+
+
 });
 
 
