@@ -40,11 +40,18 @@
 
     <div class=" container col-10">
         <div class=" container col-6">
-            {{#each data}}
-                <h2>Xin chào tài khoản {{this.username}}</h2>
-                <div>Chúc bạn ngày mới tốt lành</div>
-                <a class="btn btn-primary">Đăng xuất</a>
-            {{/each}}
+            <h2>Xin chào tài khoản {{user}}</h2>
+            <div>Chúc bạn ngày mới tốt lành</div>
+            <form action="/signIn" method="get">
+                <div class="form-group" style="display: none">
+                    <input type="text" name="userKH" value="{{user}}" class="form-control">
+                </div>
+
+                <button type="submit" name="dx" value="1" class="btn btn-warning">Đăng xuất</button>
+
+            </form>
+
+
         </div>
     </div>
 </div>

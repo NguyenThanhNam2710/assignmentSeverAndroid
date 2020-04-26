@@ -26,21 +26,25 @@ app.set('view engine', '.hbs')
 app.listen(9090);
 
 app.get('/signIn', async function (request, response) {
-
-    let nUser = request.query.nUser;
-    let nPass = request.query.nPass;
-
-    let newUser = new User({
-        username: nUser,
-        password: nPass,
-    });
-    let status = await newUser.save();
-    if (status) {
-        response.render('signIn', {status: 'block', data: 'Tạo tài khoản thành công.', user: nUser, pass: nPass});
+    let dx = request.query.dx;
+    if (dx == 1) {
+        response.render('signIn', {status: 'none'});
     } else {
-        response.send('Tạo tài khoản thất bại.');
-    }
 
+        let nUser = request.query.nUser;
+        let nPass = request.query.nPass;
+
+        let newUser = new User({
+            username: nUser,
+            password: nPass,
+        });
+        let status = await newUser.save();
+        if (status) {
+            response.render('signIn', {status: 'block', data: 'Tạo tài khoản thành công.', user: nUser, pass: nPass});
+        } else {
+            response.send('Tạo tài khoản thất bại.');
+        }
+    }
 });
 app.get('/', function (request, response) {
     response.render('signIn', {status: 'none', user: '', pass: ''});
@@ -63,7 +67,8 @@ app.get('/index', async function (request, response) {
             pass: ''
         });
     } else {
-        response.render('index', {data: users});
+        // let id = users[0]._id;
+        response.render('index', {user: user, pass: pass});
     }
 
 
@@ -119,16 +124,16 @@ app.get('/updatesanpham', async function (request, response) {
 
         response.render('updatesanpham', {
             title: 'Cập nhật sản phẩm',
-            status:'none',
+            status: 'none',
             btnUD: 'Cập nhật',
             btnC: 'Làm lại',
-            idSP:idSP,
-            imageSP:imageSP,
-            nameSP:nameSP,
-            priceSP:priceSP,
-            descriptionSP:descriptionSP,
-            typeSP:typeSP,
-            slSP:slSP,
+            idSP: idSP,
+            imageSP: imageSP,
+            nameSP: nameSP,
+            priceSP: priceSP,
+            descriptionSP: descriptionSP,
+            typeSP: typeSP,
+            slSP: slSP,
         });
     }
 
@@ -167,130 +172,152 @@ app.get('/uploadsanpham', async function (request, response) {
 
 app.get('/sanpham', async function (request, response) {
     let products = await Product.find({}).lean();
-    response.render('sanpham', {data: products});
+    let search = request.query.search;
+    if (search == 1) {
+        let nameSP = request.query.nameSP;
+        let seachProducts = await Product.find({name: nameSP}).lean();
+        response.render('sanpham', {data: seachProducts});
+    } else {
+        response.render('sanpham', {data: products});
+    }
+
 });
 
 app.get('/quanlysanpham', async function (request, response) {
     let products = await Product.find({}).lean();
-
-
-    let del = request.query.del;
-    let edit = request.query.update;
-    console.log(del + ' ' + edit);
-    if (del == 1) {
-        let idSP = request.query.idSP;
-        console.log(idSP + "del Sp");
-
-        let status = await Product.findByIdAndDelete(idSP);
-        let nProduct = await Product.find({}).lean();
-        if (status) {
-            response.render('quanlysanpham', {
-                data: nProduct,
-                status: 'block',
-                textAlert: 'Xóa sản phẩm thành công.'
-            });
-        } else {
-            response.render('quanlysanpham', {
-                data: nProduct,
-                status: 'block',
-                textAlert: 'Xóa sản phẩm thất bại.'
-            });
-        }
-    }  else if (edit == 1) {
-
-        let nId = request.query.nId;
+    let search = request.query.search;
+    if (search == 1) {
         let nameSP = request.query.nameSP;
-        let priceSP = request.query.priceSP;
-        let exImage = request.query.exImage;
-        let descriptionSP = request.query.descriptionSP;
-        let typeSP = request.query.typeSP;
-        let slSP = request.query.slSP;
+        let seachProducts = await Product.find({name: nameSP}).lean();
+        response.render('quanlysanpham', {data: seachProducts, status: 'none'});
+    } else {
 
-        console.log(nId + "edit sp");
-        let status = await Product.findByIdAndUpdate(nId, {
-            name: nameSP,
-            price: priceSP,
-            description: descriptionSP,
-            type: typeSP,
-            sl: slSP,
-            image: '../public/images/' + exImage
-        });
-        let nProduct = await Product.find({}).lean();
-        if (status) {
-            response.render('quanlysanpham', {
-                data: nProduct,
-                status: 'block',
-                textAlert: 'Cập nhật sản phẩm thành công.'
+        let del = request.query.del;
+        let edit = request.query.update;
+        console.log(del + ' ' + edit);
+        if (del == 1) {
+            let idSP = request.query.idSP;
+            console.log(idSP + "del Sp");
+
+            let status = await Product.findByIdAndDelete(idSP);
+            let nProduct = await Product.find({}).lean();
+            if (status) {
+                response.render('quanlysanpham', {
+                    data: nProduct,
+                    status: 'block',
+                    textAlert: 'Xóa sản phẩm thành công.'
+                });
+            } else {
+                response.render('quanlysanpham', {
+                    data: nProduct,
+                    status: 'block',
+                    textAlert: 'Xóa sản phẩm thất bại.'
+                });
+            }
+        } else if (edit == 1) {
+
+            let nId = request.query.nId;
+            let nameSP = request.query.nameSP;
+            let priceSP = request.query.priceSP;
+            let exImage = request.query.exImage;
+            let descriptionSP = request.query.descriptionSP;
+            let typeSP = request.query.typeSP;
+            let slSP = request.query.slSP;
+
+            console.log(nId + "edit sp");
+            let status = await Product.findByIdAndUpdate(nId, {
+                name: nameSP,
+                price: priceSP,
+                description: descriptionSP,
+                type: typeSP,
+                sl: slSP,
+                image: '../public/images/' + exImage
             });
+            let nProduct = await Product.find({}).lean();
+            if (status) {
+                response.render('quanlysanpham', {
+                    data: nProduct,
+                    status: 'block',
+                    textAlert: 'Cập nhật sản phẩm thành công.'
+                });
+            } else {
+                response.render('quanlysanpham', {
+                    data: nProduct,
+                    status: 'block',
+                    textAlert: 'Cập nhật sản phẩm thất bại.'
+                });
+            }
+
         } else {
-            response.render('quanlysanpham', {
-                data: nProduct,
-                status: 'block',
-                textAlert: 'Cập nhật sản phẩm thất bại.'
-            });
+            response.render('quanlysanpham', {data: products, status: 'none'});
         }
-
-    }else {
-        response.render('quanlysanpham', {data: products, status: 'none'});
     }
 });
 app.get('/danhsachkhachhang', async function (request, response) {
     let users = await User.find({}).lean();
-    let del = request.query.del;
-    let edit = request.query.update;
-    console.log(del + ' ' + edit);
-    if (del == 1) {
-        let idKH = request.query.idKH;
-        console.log(idKH + "del kh");
-
-        let status = await User.findByIdAndDelete(idKH);
-        let nUsers = await User.find({}).lean();
-        if (status) {
-            response.render('danhsachkhachhang', {
-                data: nUsers,
-                status: 'block',
-                textAlert: 'Xóa khách hàng thành công.'
-            });
-        } else {
-            response.render('danhsachkhachhang', {
-                data: nUsers,
-                status: 'block',
-                textAlert: 'Xóa khách hàng thất bại.'
-            });
-        }
-
-    } else if (edit == 1) {
-
-        let nId = request.query.nId;
-        let nUser = request.query.nUser;
-        let nPass = request.query.nPass;
-        console.log(nId + "edit kh");
-        let status = await User.findByIdAndUpdate(nId, {
-            username: nUser,
-            password: nPass
-        });
-        let nUsers = await User.find({}).lean();
-        if (status) {
-            response.render('danhsachkhachhang', {
-                data: nUsers,
-                status: 'block',
-                textAlert: 'Cập nhật khách hàng thành công.'
-            });
-        } else {
-            response.render('danhsachkhachhang', {
-                data: nUsers,
-                status: 'block',
-                textAlert: 'Cập nhật khách hàng thất bại.'
-            });
-        }
-
+    let search = request.query.search;
+    if (search == 1) {
+        let nameSP = request.query.nameSP;
+        let seachUser = await User.find({username: nameSP}).lean();
+        response.render('danhsachkhachhang', {data: seachUser, status: 'none'});
     } else {
-        response.render('danhsachkhachhang', {data: users, status: 'none'});
-        del = 0;
-        edit = 0;
+
+        let del = request.query.del;
+        let edit = request.query.update;
+        console.log(del + ' ' + edit);
+        if (del == 1) {
+            let idKH = request.query.idKH;
+            console.log(idKH + "del kh");
+
+            let status = await User.findByIdAndDelete(idKH);
+            let nUsers = await User.find({}).lean();
+            if (status) {
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Xóa khách hàng thành công.'
+                });
+            } else {
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Xóa khách hàng thất bại.'
+                });
+            }
+
+        } else if (edit == 1) {
+
+            let nId = request.query.nId;
+            let nUser = request.query.nUser;
+            let nPass = request.query.nPass;
+            console.log(nId + "edit kh");
+            let status = await User.findByIdAndUpdate(nId, {
+                username: nUser,
+                password: nPass
+            });
+            let nUsers = await User.find({}).lean();
+            if (status) {
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Cập nhật khách hàng thành công.'
+                });
+            } else {
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Cập nhật khách hàng thất bại.'
+                });
+            }
+
+        } else {
+            response.render('danhsachkhachhang', {data: users, status: 'none'});
+            del = 0;
+            edit = 0;
+        }
+
+
     }
-
-
 });
 
 
