@@ -40,34 +40,52 @@
 
     <div class="container rounded-bottom bg-light ">
         <br> <br>
-        <table class="table container col-10">
+        <table class="table container">
             <thead>
             <tr>
                 <th scope="col">_id</th>
+                <th scope="col">Đường dẫn ảnh</th>
                 <th scope="col">Tên sản phẩm</th>
                 <th scope="col">Giá</th>
                 <th scope="col">Mô tả</th>
                 <th scope="col">Loại</th>
+                <th scope="col">Số lượng</th>
                 <th scope="col">Thao tác</th>
             </tr>
             </thead>
             <tbody>
+            <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{textAlert}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             {{#each data}}
                 <tr>
                     <th scope="row">{{this._id}}</th>
+                    <td>{{this.image}}</td>
                     <td>{{this.name}}</td>
                     <td>{{this.price}}</td>
                     <td>{{this.description}}</td>
                     <td>{{this.type}}</td>
+                    <td>{{this.sl}}</td>
                     <td>
+
                         <a class="btn btn-primary">Sửa</a>
-                        <a class="btn btn-warning">Xóa</a>
+                        <form>
+                            <div class="form-group" style="display: none">
+                                <input type="text" name="idSP" value="{{this._id}}" class="form-control">
+                            </div>
+                            <button type="submit" name="del" value="1" class="btn btn-danger">Xóa</button>
+                        </form>
                     </td>
                 </tr>
             {{/each}}
             </tbody>
         </table>
+        <br> <br> <br>
     </div>
+
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
