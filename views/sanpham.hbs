@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/index">BookManager</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -17,29 +17,42 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+
+            <ul class="  navbar-nav fmy-2 my-lg-0  mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index">Admin</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/sanpham">Sản phẩm</a>
                 </li>
+            </ul>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" name="nameSP" placeholder="Nhập tên sản phẩm ..."
+                       aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" name="search" value="1" type="submit">Tìm kiếm
+                </button>
+            </form>
+            <ul class="  navbar-nav fmy-2 my-lg-0 ">
                 <li class="nav-item">
-                    <a class="nav-link" href="/quanlysanpham">Quản lý sản phẩm</a>
+                    <a class="nav-link" href="#">Giỏ hàng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/uploadsanpham">Upload sản phẩm</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/danhsachkhachhang">Danh sách khách hàng</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-dark text-light dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tài khoản
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Tài khoản của bạn</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Đăng xuất</a>
+                        </div>
+                    </div>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" name="nameSP" placeholder="Nhập tên sản phẩm ..." aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" name="search" value="1" type="submit">Tìm kiếm</button>
-            </form>
         </div>
     </nav>
-
-
-    <div class="container rounded-bottom bg-light ">
+    <div class=" rounded-bottom bg-light ">
         <br> <br>
         <div class=" container col-10">
             <div class="row row-cols-1 row-cols-md-3">
@@ -54,7 +67,7 @@
                                 <h5 class="card-title">{{this.name}}</h5>
                                 <p class="card-text">{{this.description}}</p>
                                 <div class="card-footer">
-                                    <p class="">Giá:  {{this.price}}</p>
+                                    <p class="">Giá:  {{this.price}} VNĐ</p>
                                     <p class="">Loại:  {{this.type}}</p>
                                     <a class="btn btn-primary col-12">Thêm vào giỏ hàng</a>
                                 </div>

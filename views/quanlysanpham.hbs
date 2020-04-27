@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/index">BookManager</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -17,86 +17,120 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+
+            <ul class="  navbar-nav fmy-2 my-lg-0  mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index">Admin</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/sanpham">Sản phẩm</a>
                 </li>
+            </ul>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" name="nameSP" placeholder="Nhập tên sản phẩm ..."
+                       aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" name="search" value="1" type="submit">Tìm kiếm
+                </button>
+            </form>
+            <ul class="  navbar-nav fmy-2 my-lg-0 ">
                 <li class="nav-item">
-                    <a class="nav-link" href="/quanlysanpham">Quản lý sản phẩm</a>
+                    <a class="nav-link" href="#">Giỏ hàng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/uploadsanpham">Upload sản phẩm</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/danhsachkhachhang">Danh sách khách hàng</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-dark text-light dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tài khoản
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Tài khoản của bạn</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Đăng xuất</a>
+                        </div>
+                    </div>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" name="nameSP" placeholder="Nhập tên sản phẩm ..." aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" name="search" value="1" type="submit">Tìm kiếm</button>
-            </form>
         </div>
     </nav>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="list-group">
 
-    <div class="container rounded-bottom bg-light ">
-        <br> <br>
-        <table class="table container">
-            <thead>
-            <tr>
-                <th scope="col">_id</th>
-                <th scope="col">Đường dẫn ảnh</th>
-                <th scope="col">Tên sản phẩm</th>
-                <th scope="col">Giá</th>
-                <th scope="col">Mô tả</th>
-                <th scope="col">Loại</th>
-                <th scope="col">Số lượng</th>
-                <th scope="col">Thao tác</th>
-            </tr>
-            </thead>
-            <tbody>
-            <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{textAlert}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <a href="/quanlysanpham" class="list-group-item list-group-item-action">
+                    Quản lý sản phẩm
+                </a>
+                <a href="/danhsachkhachhang" class="list-group-item list-group-item-action">
+                    Quản lý khách hàng
+                </a>
+                <a href="/uploadsanpham" class="list-group-item list-group-item-action">
+                    Upload sản phẩm
+                </a>
+                <a href="/sanpham" class="list-group-item list-group-item-action">
+                    Tài khoản quản trị
+                </a>
             </div>
-            {{#each data}}
+        </div>
+        <div class="col-sm-10  rounded-bottom bg-light ">
+            <br> <br>
+            <table class="table container">
+                <thead>
                 <tr>
-                    <th scope="row">{{this._id}}</th>
-                    <td>{{this.image}}</td>
-                    <td>{{this.name}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.type}}</td>
-                    <td>{{this.sl}}</td>
-                    <td>
-
-                        <form action="/updatesanpham" method="get">
-                            <div class="form-group" style="display: none">
-                                <input type="text" name="idSP" value="{{this._id}}" class="form-control">
-                                <input type="text" name="imageSP" value="{{this.image}}" class="form-control">
-                                <input type="text" name="nameSP" value="{{this.name}}" class="form-control">
-                                <input type="text" name="priceSP" value="{{this.price}}" class="form-control">
-                                <input type="text" name="descriptionSP" value="{{this.description}}" class="form-control">
-                                <input type="text" name="typeSP" value="{{this.type}}" class="form-control">
-                                <input type="text" name="slSP" value="{{this.sl}}" class="form-control">
-                            </div>
-
-                            <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
-
-                        </form>
-                        <form>
-                            <div class="form-group" style="display: none">
-                                <input type="text" name="idSP" value="{{this._id}}" class="form-control">
-                            </div>
-                            <button type="submit" name="del" value="1" class="btn btn-danger">Xóa</button>
-                        </form>
-                    </td>
+                    <th scope="col">_id</th>
+                    <th scope="col">Đường dẫn ảnh</th>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Giá(VNĐ)</th>
+                    <th scope="col">Mô tả</th>
+                    <th scope="col">Loại</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Thao tác</th>
                 </tr>
-            {{/each}}
-            </tbody>
-        </table>
-        <br> <br> <br>
+                </thead>
+                <tbody>
+                <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{textAlert}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{#each data}}
+                    <tr>
+                        <th scope="row">{{this._id}}</th>
+                        <td>{{this.image}}</td>
+                        <td>{{this.name}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.type}}</td>
+                        <td>{{this.sl}}</td>
+                        <td>
+
+                            <form action="/updatesanpham" method="get">
+                                <div class="form-group" style="display: none">
+                                    <input type="text" name="idSP" value="{{this._id}}" class="form-control">
+                                    <input type="text" name="imageSP" value="{{this.image}}" class="form-control">
+                                    <input type="text" name="nameSP" value="{{this.name}}" class="form-control">
+                                    <input type="text" name="priceSP" value="{{this.price}}" class="form-control">
+                                    <input type="text" name="descriptionSP" value="{{this.description}}"
+                                           class="form-control">
+                                    <input type="text" name="typeSP" value="{{this.type}}" class="form-control">
+                                    <input type="text" name="slSP" value="{{this.sl}}" class="form-control">
+                                </div>
+
+                                <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
+
+                            </form>
+                            <form>
+                                <div class="form-group" style="display: none">
+                                    <input type="text" name="idSP" value="{{this._id}}" class="form-control">
+                                </div>
+                                <button type="submit" name="del" value="1" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            <br> <br> <br>
+        </div>
     </div>
 
 </div>

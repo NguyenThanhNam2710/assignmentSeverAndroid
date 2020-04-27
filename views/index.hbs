@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/index">BookManager</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -17,52 +17,80 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+
+            <ul class="  navbar-nav fmy-2 my-lg-0  mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index">Admin</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/sanpham">Sản phẩm</a>
                 </li>
+            </ul>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" name="nameSP" placeholder="Nhập tên sản phẩm ..."
+                       aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" name="search" value="1" type="submit">Tìm kiếm
+                </button>
+            </form>
+            <ul class="  navbar-nav fmy-2 my-lg-0 ">
                 <li class="nav-item">
-                    <a class="nav-link" href="/quanlysanpham">Quản lý sản phẩm</a>
+                    <a class="nav-link" href="#">Giỏ hàng</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/uploadsanpham">Upload sản phẩm</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/danhsachkhachhang">Danh sách khách hàng</a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-dark text-light dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tài khoản
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Tài khoản của bạn</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Đăng xuất</a>
+                        </div>
+                    </div>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Nhập tại đây ..." aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
-            </form>
         </div>
     </nav>
 
-    <div class=" container col-10">
-        <div class=" container col-6">
+
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="list-group">
+
+                <a href="/quanlysanpham" class="list-group-item list-group-item-action">
+                    Quản lý sản phẩm
+                </a>
+                <a href="/danhsachkhachhang" class="list-group-item list-group-item-action">
+                    Quản lý khách hàng
+                </a>
+                <a href="/uploadsanpham" class="list-group-item list-group-item-action">
+                    Upload sản phẩm
+                </a>
+                <a href="/sanpham" class="list-group-item list-group-item-action">
+                    Tài khoản quản trị
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-10 bg-danger">
             <h2>Xin chào tài khoản {{user}}</h2>
             <div>Chúc bạn ngày mới tốt lành</div>
             <form action="/signIn" method="get">
                 <div class="form-group" style="display: none">
                     <input type="text" name="userKH" value="{{user}}" class="form-control">
                 </div>
-
                 <button type="submit" name="dx" value="1" class="btn btn-warning">Đăng xuất</button>
-
             </form>
-
-
         </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
 </body>
 </html>

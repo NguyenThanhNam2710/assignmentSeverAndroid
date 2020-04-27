@@ -94,7 +94,7 @@ app.get('/index', async function (request, response) {
         });
     } else {
         // let id = users[0]._id;
-        response.render('index', {user: nameDN, pass: pass});
+        response.render('index', {status: 'none', user: nameDN, pass: pass});
     }
 
 
