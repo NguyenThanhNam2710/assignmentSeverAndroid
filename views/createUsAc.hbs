@@ -67,7 +67,7 @@
             <a href="/createAdAc" class="list-group-item list-group-item-action">
                 Tài khoản quản trị
             </a>
-            <a href="/signUp" class="list-group-item list-group-item-action">
+            <a href="/createUsAc" class="list-group-item list-group-item-action">
                 Tạo tài khoản khách
             </a>
         </div>
@@ -76,16 +76,22 @@
         <div class=" rounded-bottom bg-light ">
             <hr>
             <hr>
-            <form action="/{{action}}" method="get" class=" container col-10">
-                <input type="text" name="nId" value="{{idKH}}" class="form-control" style="display: none">
+            <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{textAlert}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="createUsAc" method="get" class=" container col-10">
+                <input type="text" name="nId" class="form-control" style="display: none">
                 <div class="form-group">
                     <label for="InputUsername">Username</label>
-                    <input type="text" name="nUser" value="{{userKH}}" class="form-control" id="InputUsername" required
+                    <input type="text" name="nUser" class="form-control" id="InputUsername" required
                            placeholder="Enter your username">
                 </div>
                 <div class="form-group">
                     <label for="InputPassword">Password</label>
-                    <input type="password" name="nPass" value="{{passKH}}" class="form-control" id="InputPassword"
+                    <input type="password" name="nPass" class="form-control" id="InputPassword"
                            required
                            placeholder="Enter your password">
                 </div>
@@ -99,10 +105,11 @@
                 <div class="row justify-content-center">
                     <div class="col-4">
                         <button type="submit" name="update" value="1"
-                                class="btn btn-outline-dark col-sm-12 ">{{btnUD}}</button>
+                                class="btn btn-outline-dark col-sm-12 ">Tạo tài khoản
+                        </button>
                     </div>
                     <div class="col-4">
-                        <a href="{{btnC}}" id="cancel"class="btn btn-outline-dark col-sm-12">Hủy</a>
+                        <button type="reset" id="cancel" class="btn btn-outline-dark col-sm-12">Hủy</button>
                     </div>
                 </div>
             </form>

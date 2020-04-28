@@ -29,41 +29,41 @@ app.set('view engine', '.hbs')
 app.listen(9090);
 
 
-app.get('/signIn', async function (request, response) {
-    let nUser = request.query.nUser;
-    let nPass = request.query.nPass;
-
-    let users = await User.find({username: nUser}).lean();   //dk
-    if (users.length <= 0) {
-        let newUser = new User({
-            username: nUser,
-            password: nPass,
-        });
-        let status = await newUser.save();
-        if (status) {
-            response.render('signIn', {
-                status: 'block',
-                data: 'Tạo tài khoản thành công.',
-                user: nUser,
-                pass: nPass
-            });
-        } else {
-            response.render('signIn', {
-                status: 'block',
-                data: 'Tạo tài khoản thất bại.',
-                user: '',
-                pass: ''
-            });
-        }
-    } else {
-        response.render('signIn', {
-            status: 'block',
-            data: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
-            user: '',
-            pass: ''
-        });
-    }
-});
+// app.get('/signIn', async function (request, response) {
+//     let nUser = request.query.nUser;
+//     let nPass = request.query.nPass;
+//
+//     let users = await User.find({username: nUser}).lean();   //dk
+//     if (users.length <= 0) {
+//         let newUser = new User({
+//             username: nUser,
+//             password: nPass,
+//         });
+//         let status = await newUser.save();
+//         if (status) {
+//             response.render('signIn', {
+//                 status: 'block',
+//                 data: 'Tạo tài khoản thành công.',
+//                 user: nUser,
+//                 pass: nPass
+//             });
+//         } else {
+//             response.render('signIn', {
+//                 status: 'block',
+//                 data: 'Tạo tài khoản thất bại.',
+//                 user: '',
+//                 pass: ''
+//             });
+//         }
+//     } else {
+//         response.render('signIn', {
+//             status: 'block',
+//             data: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
+//             user: '',
+//             pass: ''
+//         });
+//     }
+// });
 app.get('/', function (request, response) {
     response.render('signIn', {status: 'none', user: '', pass: ''});
 });
@@ -130,23 +130,20 @@ app.get('/signUp', async function (request, response) {
         let userKH = request.query.userKH;
         let passKH = request.query.passKH;
         response.render('signUp', {
-            title: 'Cập nhật tài khoản',
             btnUD: 'Cập nhật',
             btnC: 'danhsachkhachhang',
             action: 'danhsachkhachhang',
             userKH: userKH,
             passKH: passKH,
-            idKH: idKH
+            idKH: idKH,
+            dsp: 'block'
         });
     } else {
         response.render('signUp', {
-            title: 'Tạo tài khoản',
             btnUD: 'Xong',
             btnC: 'signIn',
             action: 'signIn',
-            userKH: '',
-            passKH: '',
-            idKH: ''
+            dsp: 'none'
         });
     }
 
@@ -229,8 +226,6 @@ app.get('/uploadsanpham', async function (request, response) {
         response.render('uploadsanpham', {status: 'none'});
     }
 });
-
-
 app.get('/createAdAc', async function (request, response) {
     let a = await Admin.find({}).lean();   //dk
     let search = request.query.search;
@@ -344,6 +339,43 @@ app.get('/createAdAc', async function (request, response) {
         }
     }
 });
+app.get('/createUsAc', async function (request, response) {
+    let nUser = request.query.nUser;
+    let nPass = request.query.nPass;
+    if (nUser && nPass) {
+        let users = await User.find({username: nUser}).lean();   //dk
+        if (users.length <= 0) {
+            let newUser = new User({
+                username: nUser,
+                password: nPass,
+            });
+            let status = await newUser.save();
+            if (status) {
+                response.render('createUsAc', {
+                    status: 'block',
+                    textAlert: 'Tạo tài khoản thành công.',
+                });
+            } else {
+                response.render('createUsAc', {
+                    status: 'block',
+                    textAlert: 'Tạo tài khoản thất bại.',
+                });
+            }
+        } else {
+            response.render('createUsAc', {
+                status: 'block',
+                textAlert: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
+            });
+        }
+    } else {
+        response.render('createUsAc', {
+            status: 'none',
+        });
+    }
+
+});
+
+
 app.get('/sanpham', async function (request, response) {
     let products = await Product.find({}).lean();
     let search = request.query.search;
