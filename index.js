@@ -95,14 +95,21 @@ app.get('/index', async function (request, response) {
             pass: ''
         });
     } else {
-        // let id = users[0]._id;
         response.render('index', {status: 'none', user: nameDN, pass: pass});
     }
 
 
 });
-let del = '';
-app.get('/createAdAc/:id', async function (request, response) {
+app.get('/updateAdAc', async function (request, response) {
+    let userAD = request.query.userAD;
+    let passAD = request.query.passAD;
+    let idAD = request.query.idAD;
+    response.render('updateAdAc', {
+        status: 'none',
+        user: userAD,
+        pass: passAD,
+        id: idAD
+    });
 
 });
 
@@ -110,7 +117,7 @@ app.get('/createAdAc', async function (request, response) {
     let a = await Admin.find({}).lean();   //dk
     let sm = request.query.sm;
     let del = request.query.del;
-    let edit = request.query.update;
+    let edit = request.query.ud;
     if (sm == 1) {
         let nUser = request.query.nUser;
         let nPass = request.query.nPass;
@@ -148,6 +155,7 @@ app.get('/createAdAc', async function (request, response) {
             });
         }
     } else if (del == 1) {
+        console.log('del ad ' + request.query.idAD);
         let status = await Admin.findByIdAndDelete(request.query.idAD);
         let admins = await Admin.find({}).lean();   //dk
         if (status) {
@@ -164,12 +172,12 @@ app.get('/createAdAc', async function (request, response) {
             });
         }
     } else if (edit == 1) {
-        console.log('edit =1: ' + request.query.idAD);
-        let nId = request.query.idAD;
+        let nId = request.query.nId;
         let nUser = request.query.nUser;
         let nPass = request.query.nPass;
+        console.log('edit ad ' + request.query.nId);
 
-        let admins = await Admin.find({username: nUser}).lean();   //dk
+        let admins = await Admin.find({username: nUser,password:nPass}).lean();   //dk
         if (admins.length <= 0) {
             console.log(nId + "edit ad");
             let status = await Admin.findByIdAndUpdate(nId, {
@@ -200,8 +208,8 @@ app.get('/createAdAc', async function (request, response) {
         }
 
     } else {
-        del=0;
-        edit=0;
+        del = 0;
+        edit = 0;
         response.render('createAdAc', {
             status: 'none',
             data: a,
@@ -223,7 +231,7 @@ app.get('/signUp', async function (request, response) {
         response.render('signUp', {
             title: 'Cập nhật tài khoản',
             btnUD: 'Cập nhật',
-            btnC: 'Làm lại',
+            btnC: 'danhsachkhachhang',
             action: 'danhsachkhachhang',
             userKH: userKH,
             passKH: passKH,
@@ -233,7 +241,7 @@ app.get('/signUp', async function (request, response) {
         response.render('signUp', {
             title: 'Tạo tài khoản',
             btnUD: 'Xong',
-            btnC: 'Làm lại',
+            btnC: 'signIn',
             action: 'signIn',
             userKH: '',
             passKH: '',
@@ -276,51 +284,50 @@ app.get('/updatesanpham', async function (request, response) {
 
 });
 app.get('/uploadsanpham', async function (request, response) {
-        let sm = request.query.sm;
-        let nameSP = request.query.nameSP;
-        let priceSP = request.query.priceSP;
-        let descriptionSP = request.query.descriptionSP;
-        let typeSP = request.query.typeSP;
-        let slSP = request.query.slSP;
-        let image = '../public/images/' + request.query.exImage;
-        if (nameSP && priceSP && descriptionSP && typeSP && sm == 1) {
-            let products = await Product.find({
+    let sm = request.query.sm;
+    let nameSP = request.query.nameSP;
+    let priceSP = request.query.priceSP;
+    let descriptionSP = request.query.descriptionSP;
+    let typeSP = request.query.typeSP;
+    let slSP = request.query.slSP;
+    let image = '../public/images/' + request.query.exImage;
+    if (nameSP && priceSP && descriptionSP && typeSP && sm == 1) {
+        let products = await Product.find({
+            name: nameSP,
+            price: priceSP,
+            description: descriptionSP,
+            type: typeSP,
+            sl: slSP,
+            image: image
+        }).lean();   //dk
+        if (products.length <= 0) {
+            let addProduct = new Product({
                 name: nameSP,
                 price: priceSP,
                 description: descriptionSP,
                 type: typeSP,
                 sl: slSP,
                 image: image
-            }).lean();   //dk
-            if (products.length <= 0) {
-                let addProduct = new Product({
-                    name: nameSP,
-                    price: priceSP,
-                    description: descriptionSP,
-                    type: typeSP,
-                    sl: slSP,
-                    image: image
-                });
-                let status = await addProduct.save();
-                if (status) {
-                    response.render('uploadsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thành công.'});
+            });
+            let status = await addProduct.save();
+            if (status) {
+                response.render('uploadsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thành công.'});
 
-                } else {
-                    response.render('uploadsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thất bại.'});
-
-                }
             } else {
-                response.render('uploadsanpham', {
-                    status: 'block',
-                    data: 'Thêm sản phẩm ' + nameSP + ' thất bại. Sản phẩm đã tồn tại.'
-                });
+                response.render('uploadsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thất bại.'});
 
             }
         } else {
-            response.render('uploadsanpham', {status: 'none'});
+            response.render('uploadsanpham', {
+                status: 'block',
+                data: 'Thêm sản phẩm ' + nameSP + ' thất bại. Sản phẩm đã tồn tại.'
+            });
+
         }
+    } else {
+        response.render('uploadsanpham', {status: 'none'});
     }
-);
+});
 
 
 app.get('/sanpham', async function (request, response) {
@@ -460,7 +467,7 @@ app.get('/danhsachkhachhang', async function (request, response) {
             let nUser = request.query.nUser;
             let nPass = request.query.nPass;
 
-            let users = await User.find({username: nUser}).lean();   //dk
+            let users = await User.find({username: nUser, password: nPass}).lean();   //dk
             if (users.length <= 0) {
                 console.log(nId + "edit kh");
                 let status = await User.findByIdAndUpdate(nId, {

@@ -79,15 +79,17 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form class="container col-8" id="formAdd" style="display: none">
+        <form action="createAdAc" class="container col-8" id="formUD">
+            <input type="text" name="nId" value="{{id}}" class="form-control" id="InputId" required
+                   style="display: none">
             <div class="form-group">
                 <label for="InputUsername">Username</label>
-                <input type="text" name="nUser" class="form-control" id="InputUsername" required
+                <input type="text" name="nUser" value="{{user}}" class="form-control" id="InputUsername" required
                        placeholder="Enter your username">
             </div>
             <div class="form-group">
                 <label for="InputPassword">Password</label>
-                <input type="password" name="nPass" class="form-control" id="InputPassword" required
+                <input type="password" name="nPass" value="{{pass}}" class="form-control" id="InputPassword" required
                        placeholder="Enter your password">
             </div>
             <div id="ConfirmPassword" class="form-group">
@@ -99,89 +101,15 @@
             <br>
             <div class="row justify-content-center">
                 <div class="col-4">
-                    <button type="submit" name="sm" value="1" class="btn btn-outline-dark col-sm-12 ">Tạo mới</button>
+                    <button type="submit" name="ud" value="1" class="btn btn-outline-dark col-sm-12 ">Cập nhật</button>
                 </div>
                 <div class="col-4">
-                    <button type="reset" name="cancel" id="c" class="btn btn-outline-dark col-sm-12 "
-                            onclick="closeF()">
+                    <a href="createAdAc" name="cancel" class="btn btn-outline-dark col-sm-12 ">
                         Hủy tạo
-                    </button>
+                    </a>
                 </div>
             </div>
         </form>
-
-        <div class="col-3">
-            <button type="button" id="btnO" class="btn btn-outline-dark col-sm-12"
-                    onclick="myFunction()">Thêm tài khoản quản lý
-            </button>
-            <script>
-                function myFunction() {
-                    var x = document.getElementById("formAdd");
-                    var btnO = document.getElementById("btnO");
-                    var sm = document.getElementById("sm");
-                    if (x.style.display === "none") {
-                        x.style.display = "block";
-                        btnO.style.display = "none";
-                        sm.innerText = "Tạo mới";
-                    } else {
-                        x.style.display = "none";
-                        sm.innerText = "Sign in";
-                    }
-
-                }
-
-                function closeF() {
-                    var x = document.getElementById("formAdd");
-                    var btnO = document.getElementById("btnO");
-                    btnO.style.display = "block";
-                    x.style.display = "none";
-                }
-            </script>
-        </div>
-        <hr>
-
-        <table class="table container col-10">
-            <thead>
-            <tr>
-                <th scope="col">_id</th>
-                <th scope="col">Username</th>
-                <th scope="col">Password</th>
-                <th scope="col">Thao tác</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each data}}
-                <tr>
-                    <th scope="row">{{this._id}}</th>
-                    <td name="user">{{this.username}}</td>
-                    <td>{{this.password}}</td>
-                    <td>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <form action="/updateAdAc" method="get">
-                                    <div class="form-group" style="display: none">
-                                        <input type="text" name="idAD" value="{{this._id}}" class="form-control">
-                                        <input type="text" name="userAD" value="{{this.username}}" class="form-control">
-                                        <input type="text" name="passAD" value="{{this.password}}" class="form-control">
-                                    </div>
-
-                                    <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
-
-                                </form>
-                            </div>
-                            <div class="col-sm-5">
-                                <form>
-                                    <div class="form-group" style="display: none">
-                                        <input type="text" name="idAD" value="{{this._id}}" class="form-control">
-                                    </div>
-                                    <button type="submit" name="del" value="1" class="btn btn-danger">Xóa</button>
-                                </form>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            {{/each}}
-        </table>
         <br> <br> <br>
     </div>
 </div>
