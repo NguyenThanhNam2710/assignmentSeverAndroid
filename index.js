@@ -85,9 +85,9 @@ app.get('/index', async function (request, response) {
         console.log(user + " " + sm);
     }
 
-    let users = await User.find({username: user, password: pass}).lean();   //dk
+    let admins = await Admin.find({username: user, password: pass}).lean();   //dk
 
-    if (users.length <= 0 && sm == 1) {
+    if (admins.length <= 0 && sm == 1) {
         response.render('signIn', {
             status: 'block',
             data: 'Không thể đăng nhập, kiểm tra lại tài khoản và mật khẩu của bạn.',
