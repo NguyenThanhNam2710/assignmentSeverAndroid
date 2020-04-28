@@ -7,7 +7,7 @@ let adminSchema = require('./model/adminSchema');
 let User = db.model('User', userSchema, 'users');
 let Product = db.model('Product', productSchema, 'products');
 let Admin = db.model('Admin', adminSchema, 'administratorAccounts');
-let nameDN = '';
+let nameDN = '', allUser = '', allProduct = '', allAdmin = '';
 // let User = db.model('User', userSchema, 'users');
 // 1 la ten model
 // 2 la file schema
@@ -28,53 +28,53 @@ app.engine('.hbs', hbs({
 app.set('view engine', '.hbs')
 app.listen(9090);
 
+
 app.get('/signIn', async function (request, response) {
+    let nUser = request.query.nUser;
+    let nPass = request.query.nPass;
 
-
-    let dx = request.query.dx;
-    if (dx == 1) {
-        response.render('signIn', {status: 'none'});
-    } else {
-
-        let nUser = request.query.nUser;
-        let nPass = request.query.nPass;
-
-        let users = await User.find({username: nUser}).lean();   //dk
-        if (users.length <= 0) {
-            let newUser = new User({
-                username: nUser,
-                password: nPass,
+    let users = await User.find({username: nUser}).lean();   //dk
+    if (users.length <= 0) {
+        let newUser = new User({
+            username: nUser,
+            password: nPass,
+        });
+        let status = await newUser.save();
+        if (status) {
+            response.render('signIn', {
+                status: 'block',
+                data: 'Tạo tài khoản thành công.',
+                user: nUser,
+                pass: nPass
             });
-            let status = await newUser.save();
-            if (status) {
-                response.render('signIn', {
-                    status: 'block',
-                    data: 'Tạo tài khoản thành công.',
-                    user: nUser,
-                    pass: nPass
-                });
-            } else {
-                response.render('signIn', {
-                    status: 'block',
-                    data: 'Tạo tài khoản thất bại.',
-                    user: '',
-                    pass: ''
-                });
-            }
         } else {
             response.render('signIn', {
                 status: 'block',
-                data: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
+                data: 'Tạo tài khoản thất bại.',
                 user: '',
                 pass: ''
             });
         }
+    } else {
+        response.render('signIn', {
+            status: 'block',
+            data: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
+            user: '',
+            pass: ''
+        });
     }
 });
 app.get('/', function (request, response) {
     response.render('signIn', {status: 'none', user: '', pass: ''});
 });
 app.get('/index', async function (request, response) {
+    let listUser = await User.find({}).lean();   //dk
+    let listProduct = await Product.find({}).lean();   //dk
+    let listAdmin = await Admin.find({}).lean();   //dk
+    allUser = listUser.length;
+    allProduct = listProduct.length;
+    allAdmin = listAdmin.length;
+
 
     let user = request.query.user;
     let pass = request.query.pass;
@@ -95,7 +95,14 @@ app.get('/index', async function (request, response) {
             pass: ''
         });
     } else {
-        response.render('index', {status: 'none', user: nameDN, pass: pass});
+        response.render('index', {
+            status: 'none',
+            user: nameDN,
+            pass: pass,
+            allUser: allUser,
+            allProduct: allProduct,
+            allAdmin: allAdmin
+        });
     }
 
 
@@ -177,7 +184,7 @@ app.get('/createAdAc', async function (request, response) {
         let nPass = request.query.nPass;
         console.log('edit ad ' + request.query.nId);
 
-        let admins = await Admin.find({username: nUser,password:nPass}).lean();   //dk
+        let admins = await Admin.find({username: nUser, password: nPass}).lean();   //dk
         if (admins.length <= 0) {
             console.log(nId + "edit ad");
             let status = await Admin.findByIdAndUpdate(nId, {
