@@ -101,12 +101,16 @@ app.get('/index', async function (request, response) {
 
 
 });
+let del = '';
+app.get('/createAdAc/:id', async function (request, response) {
+
+});
 
 app.get('/createAdAc', async function (request, response) {
-
-
     let a = await Admin.find({}).lean();   //dk
     let sm = request.query.sm;
+    let del = request.query.del;
+    let edit = request.query.update;
     if (sm == 1) {
         let nUser = request.query.nUser;
         let nPass = request.query.nPass;
@@ -143,7 +147,61 @@ app.get('/createAdAc', async function (request, response) {
                 data: a,
             });
         }
+    } else if (del == 1) {
+        let status = await Admin.findByIdAndDelete(request.query.idAD);
+        let admins = await Admin.find({}).lean();   //dk
+        if (status) {
+            response.render('createAdAc', {
+                status: 'block',
+                textAlert: 'Xóa tài khoản thành công.',
+                data: admins,
+            });
+        } else {
+            response.render('createAdAc', {
+                status: 'block',
+                textAlert: 'Xóa tài khoản thất bại.',
+                data: admins,
+            });
+        }
+    } else if (edit == 1) {
+        console.log('edit =1: ' + request.query.idAD);
+        let nId = request.query.idAD;
+        let nUser = request.query.nUser;
+        let nPass = request.query.nPass;
+
+        let admins = await Admin.find({username: nUser}).lean();   //dk
+        if (admins.length <= 0) {
+            console.log(nId + "edit ad");
+            let status = await Admin.findByIdAndUpdate(nId, {
+                username: nUser,
+                password: nPass
+            });
+            let nAdmins = await Admin.find({}).lean();
+            if (status) {
+                response.render('createAdAc', {
+                    status: 'block',
+                    textAlert: 'Cập nhật tài khoản thành công.',
+                    data: nAdmins,
+                });
+            } else {
+                response.render('createAdAc', {
+                    status: 'block',
+                    textAlert: 'Cập nhật tài khoản thất bại.',
+                    data: nAdmins,
+                });
+            }
+        } else {
+            let nAdmins = await Admin.find({}).lean();
+            response.render('createAdAc', {
+                status: 'block',
+                textAlert: 'Cập nhật tài khoản thất bại. Tài khoản đã tồn tại.',
+                data: nAdmins,
+            });
+        }
+
     } else {
+        del=0;
+        edit=0;
         response.render('createAdAc', {
             status: 'none',
             data: a,
