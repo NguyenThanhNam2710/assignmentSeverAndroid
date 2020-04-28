@@ -3,8 +3,10 @@ let hbs = require('express-handlebars');
 let db = require('mongoose');
 let userSchema = require('./model/userSchema');
 let productSchema = require('./model/productSchema');
+let adminSchema = require('./model/adminSchema');
 let User = db.model('User', userSchema, 'users');
 let Product = db.model('Product', productSchema, 'products');
+let Admin = db.model('Admin', adminSchema, 'administratorAccounts');
 let nameDN = '';
 // let User = db.model('User', userSchema, 'users');
 // 1 la ten model
@@ -100,7 +102,56 @@ app.get('/index', async function (request, response) {
 
 });
 
+app.get('/createAdAc', async function (request, response) {
 
+
+    let a = await Admin.find({}).lean();   //dk
+    let sm = request.query.sm;
+    if (sm == 1) {
+        let nUser = request.query.nUser;
+        let nPass = request.query.nPass;
+
+        let findAdmin = await Admin.find({username: nUser}).lean();   //dk
+
+
+        if (findAdmin.length <= 0) {
+            let newAdmin = new Admin({
+                username: nUser,
+                password: nPass,
+            });
+            let status = await newAdmin.save();
+            let admins = await Admin.find({}).lean();   //dk
+
+            if (status) {
+                response.render('createAdAc', {
+                    status: 'block',
+                    textAlert: 'Tạo tài khoản thành công.',
+                    data: admins,
+                });
+            } else {
+                response.render('createAdAc', {
+                    status: 'block',
+                    textAlert: 'Tạo tài khoản thất bại.',
+                    data: admins,
+                });
+            }
+        } else {
+
+            response.render('createAdAc', {
+                status: 'block',
+                textAlert: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
+                data: a,
+            });
+        }
+    } else {
+        response.render('createAdAc', {
+            status: 'none',
+            data: a,
+        });
+    }
+
+
+});
 app.get('/signUp', async function (request, response) {
 
     let update = request.query.update;

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/index">BookManager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <ul class="  navbar-nav fmy-2 my-lg-0  mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/index">Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/sanpham">Sản phẩm</a>
+            </li>
+        </ul>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" name="nameSP" placeholder="Nhập tên sản phẩm ..."
+                   aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" name="search" value="1" type="submit">Tìm kiếm
+            </button>
+        </form>
+        <ul class="  navbar-nav fmy-2 my-lg-0 ">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Giỏ hàng</a>
+            </li>
+            <li class="nav-item">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-dark text-light dropdown-toggle"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tài khoản
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Tài khoản của bạn</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Đăng xuất</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="row">
+    <div class="col-sm-2">
+        <div class="list-group">
+
+            <a href="/quanlysanpham" class="list-group-item list-group-item-action">
+                Quản lý sản phẩm
+            </a>
+            <a href="/danhsachkhachhang" class="list-group-item list-group-item-action">
+                Quản lý khách hàng
+            </a>
+            <a href="/uploadsanpham" class="list-group-item list-group-item-action">
+                Upload sản phẩm
+            </a>
+            <a href="/createAdAc" class="list-group-item list-group-item-action">
+                Tài khoản quản trị
+            </a>
+        </div>
+    </div>
+
+    <div class="col-sm-10  rounded-bottom bg-light ">
+        <hr>
+
+        <div style="display: {{status}}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{textAlert}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form class="container col-8" id="formAdd" style="display: none">
+            <div class="form-group">
+                <label for="InputUsername">Username</label>
+                <input type="text" name="nUser" class="form-control" id="InputUsername" required
+                       placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="InputPassword">Password</label>
+                <input type="password" name="nPass" class="form-control" id="InputPassword" required
+                       placeholder="Enter your password">
+            </div>
+            <div id="ConfirmPassword" class="form-group">
+                <label for="InputConfirmPassword">Confirm Password</label>
+                <input type="password" name="cfPass" class="form-control" id="InputConfirmPassword" required
+                       placeholder="Enter your password">
+                <span id='message'></span>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <button type="submit" name="sm" value="1" class="btn btn-outline-dark col-sm-12 ">Tạo mới</button>
+                </div>
+                <div class="col-4">
+                    <button type="reset" name="cancel" class="btn btn-outline-dark col-sm-12 " onclick="myFunction()">
+                        Hủy tạo
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="col-3">
+            <button type="button" id="btnO" class="btn btn-outline-dark col-sm-12"
+                    onclick="myFunction()">Thêm tài khoản quản lý
+            </button>
+            <script>
+                function myFunction() {
+                    var x = document.getElementById("formAdd");
+                    var btnO = document.getElementById("btnO");
+                    var sm = document.getElementById("sm");
+                    if (x.style.display === "none") {
+                        x.style.display = "block";
+                        btnO.style.display = "none";
+                        sm.innerText = "Tạo mới";
+                    } else {
+                        x.style.display = "none";
+                        sm.innerText = "Sign in";
+                        btnO.style.display = "block";
+                    }
+                }
+            </script>
+        </div>
+        <hr>
+
+        <table class="table container col-10">
+            <thead>
+            <tr>
+                <th scope="col">_id</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each data}}
+                <tr>
+                    <th scope="row">{{this._id}}</th>
+                    <td name="user">{{this.username}}</td>
+                    <td>{{this.password}}</td>
+                    <td>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <form action="/signUp" method="get">
+                                    <div class="form-group" style="display: none">
+                                        <input type="text" name="idKH" value="{{this._id}}" class="form-control">
+                                        <input type="text" name="userKH" value="{{this.username}}" class="form-control">
+                                        <input type="text" name="passKH" value="{{this.password}}" class="form-control">
+                                    </div>
+
+                                    <button type="submit" name="update" value="1" class="btn btn-warning">Sửa</button>
+
+                                </form>
+                            </div>
+                            <div class="col-sm-5">
+                                <form>
+                                    <div class="form-group" style="display: none">
+                                        <input type="text" name="idKH" value="{{this._id}}" class="form-control">
+                                        <input type="text" name="userKH" value="{{this.username}}" class="form-control">
+                                        <input type="text" name="passKH" value="{{this.password}}" class="form-control">
+                                    </div>
+                                    <button type="submit" name="del" value="1" class="btn btn-danger">Xóa</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+        <br> <br> <br>
+    </div>
+</div>
+<script>
+    $('#InputPassword, #InputConfirmPassword').on('keyup', function () {
+        if ($('#InputPassword').val() == $('#InputConfirmPassword').val()) {
+            $('#message').html('Matching').css('color', 'green');
+        } else
+            $('#message').html('Not Matching').css('color', 'red');
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>
