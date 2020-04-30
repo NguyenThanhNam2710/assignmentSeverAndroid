@@ -537,49 +537,62 @@ app.get('/getAllproduct', async function (request, response) {
     response.send(products);
 });
 
-app.get('/getAllCart', async function (request, response) {
-    let carts = await Cart.find({});
-    response.send(carts);
+let userLogin = '';
+let stt = '';
+
+app.post('/postUserOnline', (req, res) => {
+    userLogin = req.body.userLogin;
+    if (req.body.stt != '') {
+        stt = req.body.stt;
+    }
+    res.send('dang online: ' + userLogin + '...' + stt);
+
 });
 
+app.get('/getUserCart', async function (request, response) {
+    let carts = await Cart.find({user: userLogin});
+    response.send(carts)
+});
+app.get('/getDellCart', async function (request, response) {
 
+
+    if (!stt) {
+
+        response.send('chua xoa')
+    } else {
+        let carts;
+        let status = await Cart.findByIdAndDelete(stt);
+        if (status) {
+            carts = await Cart.find({user: userLogin});
+        } else {
+            carts = await Cart.find({user: userLogin});
+        }
+
+        response.send(carts)
+    }
+
+});
 
 app.post('/postUser', async function (request, response) {
     let nUser = request.body.username;
     let nPass = request.body.password;
-    if (nUser && nPass) {
-        let users = await User.find({username: nUser}).lean();   //dk
-        if (users.length <= 0) {
-            let newUser = new User({
-                username: nUser,
-                password: nPass,
-            });
-            let status = await newUser.save();
-            if (status) {
-                response.render('createUsAc', {
-                    status: 'block',
-                    textAlert: 'Tạo tài khoản thành công.',
-                });
-            } else {
-                response.render('createUsAc', {
-                    status: 'block',
-                    textAlert: 'Tạo tài khoản thất bại.',
-                });
-            }
-        } else {
-            response.render('createUsAc', {
-                status: 'block',
-                textAlert: 'Tài khoản đã tồn tại.Mời tạo tài khoản khác !',
-            });
-        }
+
+
+    let newUser = new User({
+        username: nUser,
+        password: nPass,
+    });
+    let status = await newUser.save();
+    if (status) {
+        response.send(newUser)
     } else {
-        response.render('createUsAc', {
-            status: 'none',
-        });
+        response.send('Them thất bại.')
     }
 
 
 });
+
+
 app.post('/postCart', async function (request, response) {
     let user = request.body.user;
     let productID = request.body.productID;
