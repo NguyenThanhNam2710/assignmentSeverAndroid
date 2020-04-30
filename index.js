@@ -551,26 +551,15 @@ app.post('/postUserOnline', (req, res) => {
 
 app.get('/getUserCart', async function (request, response) {
     let carts = await Cart.find({user: userLogin});
-    response.send(carts)
-});
-app.get('/getDellCart', async function (request, response) {
-
-
-    if (!stt) {
-
-        response.send('chua xoa')
-    } else {
-        let carts;
+    if (stt) {
         let status = await Cart.findByIdAndDelete(stt);
         if (status) {
             carts = await Cart.find({user: userLogin});
         } else {
             carts = await Cart.find({user: userLogin});
         }
-
-        response.send(carts)
     }
-
+    response.send(carts)
 });
 
 app.post('/postUser', async function (request, response) {
