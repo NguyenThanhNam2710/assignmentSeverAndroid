@@ -3,6 +3,7 @@ let hbs = require('express-handlebars');
 let db = require('mongoose');
 let multer = require('multer');
 let body = require('body-parser');
+let fs = require('fs');
 
 let userSchema = require('./model/userSchema');
 let productSchema = require('./model/productSchema');
@@ -431,13 +432,12 @@ app.get('/quanlysanpham', async function (request, response) {
         let seachProducts = await Product.find({name: nameSP}).lean();
         response.render('quanlysanpham', {data: seachProducts, status: 'none'});
     } else {
-
         let del = request.query.del;
         let edit = request.query.update;
         console.log(del + ' ' + edit);
         if (del == 1) {
             let idSP = request.query.idSP;
-            console.log(idSP + "del Sp");
+            let imageSP = request.query.imageSP;
 
             let status = await Product.findByIdAndDelete(idSP);
             let nProduct = await Product.find({}).lean();
