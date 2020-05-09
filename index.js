@@ -53,7 +53,7 @@ let multerConfig = multer.diskStorage({
             var milis = date.getTime();
 
             //thiết lập tên file
-            cb(null, milis + file.originalname)
+            cb(null, file.originalname)
         }
 
     }
