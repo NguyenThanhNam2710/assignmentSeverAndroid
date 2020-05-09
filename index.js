@@ -375,8 +375,6 @@ app.post('/uploadsanpham',
             }
         })
     });
-
-
 app.get('/uploadsanpham', async function (request, response) {
     response.render('uploadsanpham', {status: 'none'});
 });
@@ -511,6 +509,71 @@ app.get('/quanlysanpham', async function (request, response) {
         }
     }
 });
+app.post('/quanlysanpham', async function (request, response) {
+    file(request, response, async function (err) {
+        if (err) {
+            // kiem tra loi co phai la max file ko
+            if (err instanceof multer.MulterError) {
+                response.send('kích thước file lớn hơn 2mb' + response)
+            } else {
+                response.send('' + err)
+            }
+
+        } else {
+            let nId = request.body.nId;
+            let nameSP = request.body.nameSP;
+            let priceSP = request.body.priceSP;
+            let descriptionSP = request.body.descriptionSP;
+            let typeSP = request.body.typeSP;
+            let slSP = request.body.slSP;
+            var exImage = request.file.filename;
+            var file_path = request.file.path;
+            let products = await Product.find({
+                name: nameSP,
+                price: priceSP,
+                description: descriptionSP,
+                type: typeSP,
+                sl: slSP,
+                image: exImage
+            }).lean();   //dk
+            if (products.length <= 0) {
+                console.log(nId + "edit sp");
+                let status = await Product.findByIdAndUpdate(nId, {
+                    name: nameSP,
+                    price: priceSP,
+                    description: descriptionSP,
+                    type: typeSP,
+                    sl: slSP,
+                    image: exImage
+                });
+                let nProduct = await Product.find({}).lean();
+                if (status) {
+                    response.render('quanlysanpham', {
+                        data: nProduct,
+                        status: 'block',
+                        textAlert: 'Cập nhật sản phẩm thành công.'
+                    });
+                } else {
+                    response.render('quanlysanpham', {
+                        data: nProduct,
+                        status: 'block',
+                        textAlert: 'Cập nhật sản phẩm thất bại.'
+                    });
+                }
+            } else {
+                let nProduct = await Product.find({}).lean();
+                response.render('quanlysanpham', {
+                    data: nProduct,
+                    status: 'block',
+                    textAlert: 'Cập nhật sản phẩm thất bại. Sản phẩm cập nhật đã tồn tại.'
+                });
+            }
+            console.log('update: ' + nameSP + ', ' + priceSP + ', ' + descriptionSP + ', ' + typeSP + ', ' + slSP + ', ' + exImage + ', ' + file_path)
+        }
+    })
+});
+
+
 app.get('/danhsachkhachhang', async function (request, response) {
     let users = await User.find({}).lean();
     let search = request.query.search;
