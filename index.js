@@ -1,6 +1,7 @@
 let express = require('express');
 let hbs = require('express-handlebars');
 let db = require('mongoose');
+let multer = require('multer');
 let body = require('body-parser');
 
 let userSchema = require('./model/userSchema');
@@ -20,6 +21,7 @@ db.connect('mongodb+srv://bookmanager:123456788@cluster0-lowdt.gcp.mongodb.net/S
 })
 
 let app = express();
+
 let path = require('path');
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(body.json());
@@ -32,6 +34,43 @@ app.engine('.hbs', hbs({
 app.set('view engine', '.hbs')
 app.listen(9090);
 
+let multerConfig = multer.diskStorage({
+    destination: function (req, file, cb) {
+
+        //thiết lập file lưu
+        cb(null, './public/images');
+    }, filename(req, file, cb) {
+
+        //chỉ cho phép tải lên các loại ảnh jpeg & jpg
+        let math = ["image/jpeg"];
+        //thông báo lỗi khi upload file không hợp lệ
+        if (math.indexOf(file.mimetype) === -1) {
+            let errorMess = 'file ' + file.originalname + ' không hợp lệ. Chỉ được Upload file ảnh đuôi jpeg & jpg.';
+            return cb(errorMess, null);
+        } else {
+            var date = new Date();
+            var milis = date.getTime();
+
+            //thiết lập tên file
+            cb(null, milis + file.originalname)
+        }
+
+    }
+})
+
+//giới gạn kích thước 1 file
+let upload = multer({
+    storage: multerConfig, limits: {
+        fileSize: 2 * 1024 * 1024
+    }
+})
+
+// upload 1 file
+let file = upload.single('exImage')
+// upload  nhiều file
+let uploadManyFiles = multer({
+    storage: multerConfig, limits: {fileSize: 2 * 1024 * 1024}
+}).array("exImage", 5);
 
 app.get('/', function (request, response) {
     response.render('signIn', {status: 'none', user: '', pass: ''});
@@ -269,50 +308,77 @@ app.get('/signUp', async function (request, response) {
 
 });
 
-app.get('/uploadsanpham', async function (request, response) {
-    let sm = request.query.sm;
-    let nameSP = request.query.nameSP;
-    let priceSP = request.query.priceSP;
-    let descriptionSP = request.query.descriptionSP;
-    let typeSP = request.query.typeSP;
-    let slSP = request.query.slSP;
-    let image = request.query.exImage;
-    if (nameSP && priceSP && descriptionSP && typeSP && sm == 1) {
-        let products = await Product.find({
-            name: nameSP,
-            price: priceSP,
-            description: descriptionSP,
-            type: typeSP,
-            sl: slSP,
-            image: image
-        }).lean();   //dk
-        if (products.length <= 0) {
-            let addProduct = new Product({
-                name: nameSP,
-                price: priceSP,
-                description: descriptionSP,
-                type: typeSP,
-                sl: slSP,
-                image: image
-            });
-            let status = await addProduct.save();
-            if (status) {
-                response.render('uploadsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thành công.'});
+app.post('/uploadsanpham',
+    (request, response) => {
+        //hiển thị các thông báo khi upload 1 file
+        file(request, response, async function (err) {
+            if (err) {
+                // kiem tra loi co phai la max file ko
+                if (err instanceof multer.MulterError) {
+                    response.send('kích thước file lớn hơn 2mb' + response)
+                } else {
+                    response.send('' + err)
+                }
 
             } else {
-                response.render('uploadsanpham', {status: 'block', data: 'Thêm sản phẩm ' + nameSP + ' thất bại.'});
+                let sm = request.body.sm;
+                let nameSP = request.body.nameSP;
+                let priceSP = request.body.priceSP;
+                let descriptionSP = request.body.descriptionSP;
+                let typeSP = request.body.typeSP;
+                let slSP = request.body.slSP;
+                var image = request.file.filename;
+                var file_path = request.file.path;
 
+                let products = await Product.find({
+                    name: nameSP,
+                    price: priceSP,
+                    description: descriptionSP,
+                    type: typeSP,
+                    sl: slSP,
+                    image: image
+                }).lean();   //dk
+                if (products.length <= 0) {
+                    let addProduct = new Product({
+                        name: nameSP,
+                        price: priceSP,
+                        description: descriptionSP,
+                        type: typeSP,
+                        sl: slSP,
+                        image: image
+                    });
+                    let status = await addProduct.save();
+                    if (status) {
+                        response.render('uploadsanpham', {
+                            status: 'block',
+                            data: 'Thêm sản phẩm ' + nameSP + ' thành công.'
+                        });
+
+                    } else {
+                        response.render('uploadsanpham', {
+                            status: 'block',
+                            data: 'Thêm sản phẩm ' + nameSP + ' thất bại.'
+                        });
+
+                    }
+
+
+                } else {
+                    response.render('uploadsanpham', {
+                        status: 'block',
+                        data: 'Thêm sản phẩm ' + nameSP + ' thất bại. Sản phẩm đã tồn tại.'
+                    });
+
+                }
+
+                console.log(sm + ', ' + nameSP + ', ' + priceSP + ', ' + descriptionSP + ', ' + typeSP + ', ' + slSP + ', ' + image + ', ' + file_path)
             }
-        } else {
-            response.render('uploadsanpham', {
-                status: 'block',
-                data: 'Thêm sản phẩm ' + nameSP + ' thất bại. Sản phẩm đã tồn tại.'
-            });
+        })
+    });
 
-        }
-    } else {
-        response.render('uploadsanpham', {status: 'none'});
-    }
+
+app.get('/uploadsanpham', async function (request, response) {
+    response.render('uploadsanpham', {status: 'none'});
 });
 app.get('/updatesanpham', async function (request, response) {
 
@@ -580,8 +646,6 @@ app.post('/postUser', async function (request, response) {
 
 
 });
-
-
 app.post('/postCart', async function (request, response) {
     let user = request.body.user;
     let productID = request.body.productID;
