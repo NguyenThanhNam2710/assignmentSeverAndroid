@@ -73,9 +73,44 @@ let uploadManyFiles = multer({
     storage: multerConfig, limits: {fileSize: 2 * 1024 * 1024}
 }).array("exImage", 5);
 
+// đăng nhập
 app.get('/', function (request, response) {
     response.render('signIn', {status: 'none', user: '', pass: ''});
 });
+
+// đăng ký
+app.get('/signUp', async function (request, response) {
+
+    let update = request.query.update;
+    console.log(update + '')
+    if (update == 1) {
+        update = 0;
+
+        let idKH = request.query.idKH;
+        let userKH = request.query.userKH;
+        let passKH = request.query.passKH;
+        response.render('signUp', {
+            btnUD: 'Cập nhật',
+            btnC: 'danhsachkhachhang',
+            action: 'danhsachkhachhang',
+            userKH: userKH,
+            passKH: passKH,
+            idKH: idKH,
+            dsp: 'block'
+        });
+    } else {
+        response.render('signUp', {
+            btnUD: 'Xong',
+            btnC: 'signIn',
+            action: 'signIn',
+            dsp: 'none'
+        });
+    }
+
+
+});
+
+// kiểm tra đăng nhập nếu đúng hiện trang trủ index
 app.get('/index', async function (request, response) {
     let listUser = await User.find({}).lean();   //dk
     let listProduct = await Product.find({}).lean();   //dk
@@ -117,6 +152,7 @@ app.get('/index', async function (request, response) {
 
 });
 
+// thêm sửa xóa tài khoản admin
 app.get('/createAdAc', async function (request, response) {
     let a = await Admin.find({}).lean();   //dk
     let search = request.query.search;
@@ -243,6 +279,8 @@ app.get('/updateAdAc', async function (request, response) {
 
 });
 
+
+// tạo tài khoản khách hàng
 app.get('/createUsAc', async function (request, response) {
     let nUser = request.query.nUser;
     let nPass = request.query.nPass;
@@ -278,37 +316,86 @@ app.get('/createUsAc', async function (request, response) {
     }
 
 });
-app.get('/signUp', async function (request, response) {
-
-    let update = request.query.update;
-    console.log(update + '')
-    if (update == 1) {
-        update = 0;
-
-        let idKH = request.query.idKH;
-        let userKH = request.query.userKH;
-        let passKH = request.query.passKH;
-        response.render('signUp', {
-            btnUD: 'Cập nhật',
-            btnC: 'danhsachkhachhang',
-            action: 'danhsachkhachhang',
-            userKH: userKH,
-            passKH: passKH,
-            idKH: idKH,
-            dsp: 'block'
-        });
+// quản lý danh sách khách hàng từ đây nhận biết update hoặc delete để sever xử lý
+app.get('/danhsachkhachhang', async function (request, response) {
+    let users = await User.find({}).lean();
+    let search = request.query.search;
+    let nameSP = request.query.nameSP;
+    if (search == 1 && nameSP) {
+        let seachUser = await User.find({username: nameSP}).lean();
+        response.render('danhsachkhachhang', {data: seachUser, status: 'none'});
     } else {
-        response.render('signUp', {
-            btnUD: 'Xong',
-            btnC: 'signIn',
-            action: 'signIn',
-            dsp: 'none'
-        });
+
+        let del = request.query.del;
+        let edit = request.query.update;
+        console.log(del + ' ' + edit);
+        if (del == 1) {
+            let idKH = request.query.idKH;
+            console.log(idKH + "del kh");
+
+            let status = await User.findByIdAndDelete(idKH);
+            let nUsers = await User.find({}).lean();
+            if (status) {
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Xóa khách hàng thành công.'
+                });
+            } else {
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Xóa khách hàng thất bại.'
+                });
+            }
+
+        } else if (edit == 1) {
+
+            let nId = request.query.nId;
+            let nUser = request.query.nUser;
+            let nPass = request.query.nPass;
+
+            let users = await User.find({username: nUser, password: nPass}).lean();   //dk
+            if (users.length <= 0) {
+                console.log(nId + "edit kh");
+                let status = await User.findByIdAndUpdate(nId, {
+                    username: nUser,
+                    password: nPass
+                });
+                let nUsers = await User.find({}).lean();
+                if (status) {
+                    response.render('danhsachkhachhang', {
+                        data: nUsers,
+                        status: 'block',
+                        textAlert: 'Cập nhật khách hàng thành công.'
+                    });
+                } else {
+                    response.render('danhsachkhachhang', {
+                        data: nUsers,
+                        status: 'block',
+                        textAlert: 'Cập nhật khách hàng thất bại.'
+                    });
+                }
+            } else {
+                let nUsers = await User.find({}).lean();
+                response.render('danhsachkhachhang', {
+                    data: nUsers,
+                    status: 'block',
+                    textAlert: 'Cập nhật khách hàng thất bại. Tên khách hàng đã tồn tại.'
+                });
+            }
+        } else {
+            response.render('danhsachkhachhang', {data: users, status: 'none'});
+            del = 0;
+            edit = 0;
+        }
+
+
     }
-
-
 });
 
+
+// thêm sửa xóa sản phẩm
 app.post('/uploadsanpham',
     (request, response) => {
         //hiển thị các thông báo khi upload 1 file
@@ -411,19 +498,8 @@ app.get('/updatesanpham', async function (request, response) {
 
 
 });
-app.get('/sanpham', async function (request, response) {
-    let products = await Product.find({}).lean();
-    let search = request.query.search;
-    let nameSP = request.query.nameSP;
-    if (search == 1 && nameSP) {
-        let seachProducts = await Product.find({name: nameSP}).lean();
-        response.render('sanpham', {data: seachProducts});
-    } else {
-        response.render('sanpham', {data: products});
-    }
 
-});
-
+// quản lý danh sách sản phẩm từ đây nhận biết update hoặc delete để sever xử lý
 app.get('/quanlysanpham', async function (request, response) {
     let products = await Product.find({}).lean();
     let search = request.query.search;
@@ -509,6 +585,7 @@ app.get('/quanlysanpham', async function (request, response) {
         }
     }
 });
+// nhận dữ liệu khi update thành công
 app.post('/quanlysanpham', async function (request, response) {
     file(request, response, async function (err) {
         if (err) {
@@ -574,101 +651,30 @@ app.post('/quanlysanpham', async function (request, response) {
 });
 
 
-app.get('/danhsachkhachhang', async function (request, response) {
-    let users = await User.find({}).lean();
+//hiển thị sản phẩm trên web
+app.get('/sanpham', async function (request, response) {
+    let products = await Product.find({}).lean();
     let search = request.query.search;
     let nameSP = request.query.nameSP;
     if (search == 1 && nameSP) {
-        let seachUser = await User.find({username: nameSP}).lean();
-        response.render('danhsachkhachhang', {data: seachUser, status: 'none'});
+        let seachProducts = await Product.find({name: nameSP}).lean();
+        response.render('sanpham', {data: seachProducts});
     } else {
-
-        let del = request.query.del;
-        let edit = request.query.update;
-        console.log(del + ' ' + edit);
-        if (del == 1) {
-            let idKH = request.query.idKH;
-            console.log(idKH + "del kh");
-
-            let status = await User.findByIdAndDelete(idKH);
-            let nUsers = await User.find({}).lean();
-            if (status) {
-                response.render('danhsachkhachhang', {
-                    data: nUsers,
-                    status: 'block',
-                    textAlert: 'Xóa khách hàng thành công.'
-                });
-            } else {
-                response.render('danhsachkhachhang', {
-                    data: nUsers,
-                    status: 'block',
-                    textAlert: 'Xóa khách hàng thất bại.'
-                });
-            }
-
-        } else if (edit == 1) {
-
-            let nId = request.query.nId;
-            let nUser = request.query.nUser;
-            let nPass = request.query.nPass;
-
-            let users = await User.find({username: nUser, password: nPass}).lean();   //dk
-            if (users.length <= 0) {
-                console.log(nId + "edit kh");
-                let status = await User.findByIdAndUpdate(nId, {
-                    username: nUser,
-                    password: nPass
-                });
-                let nUsers = await User.find({}).lean();
-                if (status) {
-                    response.render('danhsachkhachhang', {
-                        data: nUsers,
-                        status: 'block',
-                        textAlert: 'Cập nhật khách hàng thành công.'
-                    });
-                } else {
-                    response.render('danhsachkhachhang', {
-                        data: nUsers,
-                        status: 'block',
-                        textAlert: 'Cập nhật khách hàng thất bại.'
-                    });
-                }
-            } else {
-                let nUsers = await User.find({}).lean();
-                response.render('danhsachkhachhang', {
-                    data: nUsers,
-                    status: 'block',
-                    textAlert: 'Cập nhật khách hàng thất bại. Tên khách hàng đã tồn tại.'
-                });
-            }
-        } else {
-            response.render('danhsachkhachhang', {data: users, status: 'none'});
-            del = 0;
-            edit = 0;
-        }
-
-
+        response.render('sanpham', {data: products});
     }
+
 });
 
 
-//get dl
+// phần kết nối sever với app
+
+let userLogin = '';
+let stt = '';
 app.get('/getDL', async function (request, response) {
     response.render('getDL');
 });
 
-app.get('/getAlluser', async function (request, response) {
-    let users = await User.find({});
-    response.send(users);
-});
-app.get('/getAllproduct', async function (request, response) {
-    let products = await Product.find({});
-    response.send(products);
-});
-
-let userLogin = '';
-let stt = '';
-
+// nhận tên khách hàng đang online và nhận biết để xóa sp khỏi giỏ hàng
 app.post('/postUserOnline', (req, res) => {
     userLogin = req.body.userLogin;
     if (req.body.stt != '') {
@@ -677,20 +683,7 @@ app.post('/postUserOnline', (req, res) => {
     res.send('dang online: ' + userLogin + '...' + stt);
 
 });
-
-app.get('/getUserCart', async function (request, response) {
-    let carts = await Cart.find({user: userLogin});
-    if (stt) {
-        let status = await Cart.findByIdAndDelete(stt);
-        if (status) {
-            carts = await Cart.find({user: userLogin});
-        } else {
-            carts = await Cart.find({user: userLogin});
-        }
-    }
-    response.send(carts)
-});
-
+// nhận thông tin khách hàng để tạo tài khoản
 app.post('/postUser', async function (request, response) {
     let nUser = request.body.username;
     let nPass = request.body.password;
@@ -709,6 +702,7 @@ app.post('/postUser', async function (request, response) {
 
 
 });
+// nhận thông tin giỏ hàng để thêm vào database
 app.post('/postCart', async function (request, response) {
     let user = request.body.user;
     let productID = request.body.productID;
@@ -739,6 +733,29 @@ app.post('/postCart', async function (request, response) {
 
 
 });
+
+// trả về dữ liệu trong database
+app.get('/getAlluser', async function (request, response) {
+    let users = await User.find({});
+    response.send(users);
+});
+app.get('/getAllproduct', async function (request, response) {
+    let products = await Product.find({});
+    response.send(products);
+});
+app.get('/getUserCart', async function (request, response) {
+    let carts = await Cart.find({user: userLogin});
+    if (stt) {
+        let status = await Cart.findByIdAndDelete(stt);
+        if (status) {
+            carts = await Cart.find({user: userLogin});
+        } else {
+            carts = await Cart.find({user: userLogin});
+        }
+    }
+    response.send(carts)
+});
+
 
 
 
